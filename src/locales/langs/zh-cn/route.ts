@@ -13,7 +13,7 @@ const route: App.I18n.Schema['translation']['route'] = {
   '(base)_function_toggle-auth': '切换权限',
   '(base)_function_use-request': 'useRequest 演示',
   '(base)_home': '首页',
-  '(base)_manage': '系统管理',
+  '(base)_manage': '人事管理',
   '(base)_manage_role': '角色管理',
   '(base)_manage_role_[...slug]': '角色管理详情',
   '(base)_manage_user': '用户管理',

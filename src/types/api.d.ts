@@ -148,6 +148,23 @@ declare namespace Api {
         CommonSearchParams
     >;
 
+    /** user info */
+    type AddUserParams = CommonType.RecordNullable<
+      Pick<
+        Api.SystemManage.User,
+        'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone' | 'userRoles'
+      > &
+        Pick<Api.Common.CommonRecord, 'createBy' | 'id' | 'updateBy'>
+    >;
+
+    type UpdateUserParams = CommonType.RecordNullable<
+      Pick<
+        Api.SystemManage.User,
+        'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone' | 'userRoles'
+      > &
+        Pick<Api.Common.CommonRecord, 'id' | 'updateBy'>
+    >;
+
     /** user list */
     type UserList = Common.PaginatingQueryRecord<User>;
 

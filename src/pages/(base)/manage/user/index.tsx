@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
 import { Suspense, lazy } from 'react';
 
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { ATG_MAP } from '@/constants/common';
+import { selectUserInfo } from '@/features/auth/authStore';
 import { TableHeaderOperation, useTable, useTableOperate, useTableScroll } from '@/features/table';
-import { fetchGetUserList } from '@/service/api';
+import { addUserAPI, deleteUserAPI, fetchGetUserList, updateUserAPI } from '@/service/api';
 
 import UserSearch from './modules/UserSearch';
 
@@ -16,6 +18,8 @@ const tagUserGenderMap: Record<Api.SystemManage.UserGender, string> = {
 
 const UserManage = () => {
   const { t } = useTranslation();
+
+  const userInfo = useAppSelector(selectUserInfo);
 
   const { scrollConfig, tableWrapperRef } = useTableScroll();
 
@@ -147,10 +151,17 @@ const UserManage = () => {
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     useTableOperate(data, run, async (res, type) => {
       if (type === 'add') {
-        // add request 调用新增的接口
+        addUserAPI({
+          ...res,
+          createBy: userInfo.userName,
+          updateBy: userInfo.userName
+        });
         console.log(res);
       } else {
-        // edit request 调用编辑的接口
+        updateUserAPI({
+          ...res,
+          updateBy: userInfo.userName
+        });
         console.log(res);
       }
     });
@@ -163,6 +174,7 @@ const UserManage = () => {
 
   function handleDelete(id: number) {
     // request
+    deleteUserAPI(id);
     console.log(id);
 
     onDeleted();

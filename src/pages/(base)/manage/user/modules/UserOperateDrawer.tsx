@@ -73,7 +73,10 @@ const UserOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, on
           name="userName"
           rules={[rules.userName]}
         >
-          <Input placeholder={t('page.manage.user.form.userName')} />
+          <Input
+            disabled={operateType === 'edit'}
+            placeholder={t('page.manage.user.form.userName')}
+          />
         </Form.Item>
 
         <Form.Item

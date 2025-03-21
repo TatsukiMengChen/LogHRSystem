@@ -38,6 +38,35 @@ export function fetchGetMenuList() {
   });
 }
 
+export function addUserAPI(data: Api.SystemManage.AddUserParams) {
+  return request({
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'post',
+    url: '/systemManage/user'
+  });
+}
+
+export function updateUserAPI(data: Api.SystemManage.UpdateUserParams) {
+  return request({
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'put',
+    url: '/systemManage/user'
+  });
+}
+
+export function deleteUserAPI(id: number) {
+  return request({
+    method: 'delete',
+    url: `/systemManage/user/${id}`
+  });
+}
+
 /** get all pages */
 export function fetchGetAllPages() {
   return request<string[]>({
