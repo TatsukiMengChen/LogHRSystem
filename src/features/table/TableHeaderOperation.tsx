@@ -54,6 +54,7 @@ const TableHeaderOperation: FC<Props> = ({
             {t('common.add')}
           </Button>
           <Popconfirm
+            className="hidden"
             title={t('common.confirmDelete')}
             onConfirm={onDelete}
           >
