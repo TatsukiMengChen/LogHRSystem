@@ -16,7 +16,7 @@ type LoginParams = Pick<Account, 'password' | 'userName'>;
 
 const INITIAL_VALUES = {
   password: '123456',
-  userName: 'Soybean'
+  userName: 'Super'
 };
 
 const PwdLogin = () => {
