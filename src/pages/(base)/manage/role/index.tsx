@@ -14,7 +14,7 @@ const Role = () => {
 
   const isMobile = useMobile();
 
-  const nav = useNavigate();
+  // const nav = useNavigate()
 
   const { scrollConfig, tableWrapperRef } = useTableScroll();
 
@@ -66,8 +66,8 @@ const Role = () => {
           const label = t(enableStatusRecord[record.status]);
           return <ATag color={ATG_MAP[record.status]}>{label}</ATag>;
         },
-        title: t('page.manage.user.userStatus'),
-        width: 100
+        title: t('page.manage.role.roleStatus'),
+        width: 200
       },
       {
         align: 'center',
@@ -82,12 +82,12 @@ const Role = () => {
             >
               {t('common.edit')}
             </AButton>
-            <AButton
+            {/* <AButton
               size="small"
               onClick={() => nav(`/manage/role/${record.id}/${record.roleName}/${record.status}`)}
             >
               详情
-            </AButton>
+            </AButton> */}
             <APopconfirm
               title={t('common.confirmDelete')}
               onConfirm={() => handleDelete(record.id)}
