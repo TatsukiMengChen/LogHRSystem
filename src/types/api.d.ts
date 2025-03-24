@@ -88,6 +88,79 @@ declare namespace Api {
       routes: string[];
     }
   }
+  /**
+   * namespace OrderManage
+   *
+   * backend api module: "orderManage"
+   */
+  namespace OrderManage {
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
+
+    /** customer info */
+    type CustomerInfo = {
+      /** address */
+      address: string;
+      /** customer name */
+      name: string;
+      /** phone number */
+      phone: string;
+    };
+
+    /** order item */
+    type Item = {
+      /** item id */
+      id: number;
+      /** item name */
+      name: string;
+      /** quantity */
+      quantity: string;
+      /** weight */
+      weight: string;
+    };
+
+    /** order */
+    type Order = Common.CommonRecord<{
+      /** customer information */
+      customerInfo: CustomerInfo;
+      /** delivery time */
+      deliveryTime: string;
+      /** order items */
+      items: Item[];
+      /** order name */
+      name: string;
+      /** order price */
+      price: string;
+      /** sent out time */
+      sentOutTime: string;
+    }>;
+
+    /** order search params */
+    type OrderSearchParams = CommonType.RecordNullable<Pick<OrderManage.Order, 'name' | 'status'> & CommonSearchParams>;
+
+    /** order list */
+    type OrderList = Common.PaginatingQueryRecord<Order>;
+  }
+
+  namespace GoodManage {
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
+
+    type Good = Common.CommonRecord<{
+      /** 分类，分类 */
+      class: string;
+      /** 备注，备注 */
+      desc: string;
+      /** ID，ID 编号 */
+      id: number;
+      /** 库存，库存 */
+      inventory: number;
+      /** 商品名称，名称 */
+      name: string;
+      /** 仓库名称，仓库 */
+      repo: string;
+      /** 重量，单位kg */
+      weight: number;
+    }>;
+  }
 
   /**
    * namespace SystemManage

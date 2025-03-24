@@ -18,12 +18,14 @@ export const layouts: Record<string, () => Promise<any>> = {
 
 export const pages: Record<string, () => Promise<any>> = {
 "(base)_about": () => import("@/pages/(base)/about/index.tsx"),
+"(base)_good": () => import("@/pages/(base)/good/index.tsx"),
 "(base)_home": () => import("@/pages/(base)/home/index.tsx"),
 "(base)_manage": () => import("@/pages/(base)/manage/index.tsx"),
 "(base)_manage_role_[...slug]": () => import("@/pages/(base)/manage/role/[...slug].tsx"),
 "(base)_manage_role": () => import("@/pages/(base)/manage/role/index.tsx"),
 "(base)_manage_user_[id]": () => import("@/pages/(base)/manage/user/[id].tsx"),
 "(base)_manage_user": () => import("@/pages/(base)/manage/user/index.tsx"),
+"(base)_order": () => import("@/pages/(base)/order/index.tsx"),
 "(base)_user-center": () => import("@/pages/(base)/user-center/index.tsx"),
 "(blank)_login-out": () => import("@/pages/(blank)/login-out/index.tsx"),
 "(blank)_login_code-login": () => import("@/pages/(blank)/login/code-login/index.tsx"),

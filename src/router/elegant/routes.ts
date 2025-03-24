@@ -34,6 +34,18 @@ export const generatedRoutes: ElegantConstRoute[] = [
             }
           },
           {
+            matchedFiles: [null, '/src/pages/(base)/good/index.tsx', null, null],
+            name: '(base)_good',
+            path: '/good',
+            handle: { i18nKey: 'route.(base)_good', icon: 'mdi:cart-outline', order: 6, title: 'good' }
+          },
+          {
+            matchedFiles: [null, '/src/pages/(base)/order/index.tsx', null, null],
+            name: '(base)_order',
+            path: '/order',
+            handle: { i18nKey: 'route.(base)_order', icon: 'mdi:box-variant-closed', order: 7, title: '(base)_order' }
+          },
+          {
             matchedFiles: [null, '/src/pages/(base)/home/index.tsx', null, null],
             name: '(base)_home',
             path: '/home',

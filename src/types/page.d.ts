@@ -14,7 +14,7 @@ declare namespace Page {
     onClose: () => void;
     open: boolean;
     operateType: AntDesign.TableOperateType;
-    routes: string[];
-    setMenuAuthData: (data: any) => void;
+    routes?: string[];
+    setMenuAuthData?: (data: any) => void;
   }
 }

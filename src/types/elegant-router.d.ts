@@ -29,12 +29,14 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "document_procomponents": "/document/procomponents";
     "document_antd": "/document/antd";
     "(base)_about": "/about";
+    "(base)_good": "/good";
     "(base)_home": "/home";
     "(base)_manage": "/manage";
     "(base)_manage_role": "/manage/role";
     "(base)_manage_role_[...slug]": "/manage/role/*";
     "(base)_manage_user": "/manage/user";
     "(base)_manage_user_[id]": "/manage/user/:id";
+    "(base)_order": "/order";
     "(base)_user-center": "/user-center";
     "(blank)_login": "/login";
     "(blank)_login_code-login": "/login/code-login";
@@ -113,6 +115,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
   export type LastLevelRouteKey = Extract<
     RouteKey,
     | "(base)_about"
+    | "(base)_good"
     | "(base)_home"
     | "(base)"
     | "(base)_manage"
@@ -120,6 +123,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "(base)_manage_role"
     | "(base)_manage_user_[id]"
     | "(base)_manage_user"
+    | "(base)_order"
     | "(base)_user-center"
     | "(blank)"
     | "(blank)_login-out"

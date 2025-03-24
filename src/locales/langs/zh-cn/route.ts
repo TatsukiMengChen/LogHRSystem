@@ -1,11 +1,13 @@
 const route: App.I18n.Schema['translation']['route'] = {
   '(base)_about': '关于',
+  '(base)_good': '商品',
   '(base)_home': '首页',
   '(base)_manage': '人事管理',
   '(base)_manage_role': '角色管理',
   '(base)_manage_role_[...slug]': '角色管理详情',
   '(base)_manage_user': '用户管理',
   '(base)_manage_user_[id]': '用户详情',
+  '(base)_order': '物流订单',
   '(base)_user-center': '个人中心',
   '(blank)_login': '登录',
   '(blank)_login_code-login': '验证码登录',
