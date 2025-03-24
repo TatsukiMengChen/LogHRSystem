@@ -1,7 +1,7 @@
 import { useLang } from '@/features/lang';
 
 const LineChart = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const { locale } = useLang();
 
@@ -13,7 +13,8 @@ const LineChart = () => {
       right: '4%'
     },
     legend: {
-      data: [t('page.home.downloadCount'), t('page.home.registerCount')]
+      // data: [t('page.home.downloadCount'), t('page.home.registerCount')]
+      data: ['成交额', '交易额']
     },
     series: [
       {
@@ -41,7 +42,8 @@ const LineChart = () => {
         emphasis: {
           focus: 'series'
         },
-        name: t('page.home.downloadCount'),
+        name: '成交额',
+        // name: t('page.home.downloadCount'),
         smooth: true,
         stack: 'Total',
         type: 'line'
@@ -71,7 +73,8 @@ const LineChart = () => {
         emphasis: {
           focus: 'series'
         },
-        name: t('page.home.registerCount'),
+        name: '交易额',
+        // name: t('page.home.registerCount'),
         smooth: true,
         stack: 'Total',
         type: 'line'

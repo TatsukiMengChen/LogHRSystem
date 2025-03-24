@@ -26,7 +26,7 @@ function transformDataToItem<T extends string, U extends Values>(
 const Component = () => {
   const data = useLoaderData() as Api.SystemManage.User | undefined;
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   if (!data) return <LookForward />;
 
@@ -41,9 +41,9 @@ const Component = () => {
         bordered
         items={items}
       />
-      <div className="mt-16px text-center text-18px">{t('page.manage.userDetail.explain')}</div>
+      {/* <div className="mt-16px text-center text-18px">{t('page.manage.userDetail.explain')}</div> */}
 
-      <div className="mt-16px text-center text-18px">{t('page.manage.userDetail.content')}</div>
+      {/* <div className="mt-16px text-center text-18px">{t('page.manage.userDetail.content')}</div> */}
     </ACard>
   );
 };

@@ -1,7 +1,7 @@
 import { useLang } from '@/features/lang';
 
 const PieChart = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const { locale } = useLang();
 
@@ -36,7 +36,8 @@ const PieChart = () => {
         labelLine: {
           show: false
         },
-        name: t('page.home.schedule'),
+        // name: t('page.home.schedule'),
+        name: '成交占比',
         radius: ['45%', '75%'],
         type: 'pie'
       }
@@ -53,10 +54,14 @@ const PieChart = () => {
 
     updateOptions(opts => {
       opts.series[0].data = [
-        { name: t('page.home.study'), value: 20 },
-        { name: t('page.home.entertainment'), value: 10 },
-        { name: t('page.home.work'), value: 40 },
-        { name: t('page.home.rest'), value: 30 }
+        { name: '数码产品', value: 20 },
+        { name: '食品', value: 10 },
+        { name: '家电', value: 40 },
+        { name: '服装', value: 30 }
+        // { name: t('page.home.study'), value: 20 },
+        // { name: t('page.home.entertainment'), value: 10 },
+        // { name: t('page.home.work'), value: 40 },
+        // { name: t('page.home.rest'), value: 30 }
       ];
 
       return opts;
@@ -70,10 +75,10 @@ const PieChart = () => {
       opts.series[0].name = originOpts.series[0].name;
 
       opts.series[0].data = [
-        { name: t('page.home.study'), value: 20 },
-        { name: t('page.home.entertainment'), value: 10 },
-        { name: t('page.home.work'), value: 40 },
-        { name: t('page.home.rest'), value: 30 }
+        { name: '数码产品', value: 20 },
+        { name: '食品', value: 10 },
+        { name: '家电', value: 40 },
+        { name: '服装', value: 30 }
       ];
 
       return opts;

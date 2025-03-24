@@ -1,9 +1,9 @@
 import CardData from './modules/CardData';
-import CreativityBanner from './modules/CreativityBanner';
+// import CreativityBanner from './modules/CreativityBanner';
 import HeaderBanner from './modules/HeaderBanner';
 import LineChart from './modules/LineChart';
 import PieChart from './modules/PieChart';
-import ProjectNews from './modules/ProjectNews';
+// import ProjectNews from './modules/ProjectNews';
 
 const Home = () => {
   return (
@@ -30,7 +30,7 @@ const Home = () => {
           <PieChart />
         </ACol>
       </ARow>
-      <ARow gutter={[16, 16]}>
+      {/* <ARow gutter={[16, 16]}>
         <ACol
           lg={14}
           span={24}
@@ -43,7 +43,7 @@ const Home = () => {
         >
           <CreativityBanner />
         </ACol>
-      </ARow>
+      </ARow> */}
     </ASpace>
   );
 };
