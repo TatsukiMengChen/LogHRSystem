@@ -27,9 +27,10 @@ function useGetCardData() {
       },
       icon: 'ant-design:bar-chart-outlined',
       key: 'visitCount',
-      title: t('page.home.visitCount'),
+      // title: t('page.home.visitCount'),
+      title: '客户人数',
       unit: '',
-      value: 9725
+      value: 725
     },
     {
       color: {
@@ -39,8 +40,8 @@ function useGetCardData() {
       icon: 'ant-design:money-collect-outlined',
       key: 'turnover',
       title: t('page.home.turnover'),
-      unit: '$',
-      value: 1026
+      unit: '¥',
+      value: 185026
     },
     {
       color: {
@@ -49,9 +50,10 @@ function useGetCardData() {
       },
       icon: 'carbon:document-download',
       key: 'downloadCount',
-      title: t('page.home.downloadCount'),
+      // title: t('page.home.downloadCount'),
+      title: '订单数',
       unit: '',
-      value: 970925
+      value: 1325
     },
     {
       color: {
@@ -60,9 +62,10 @@ function useGetCardData() {
       },
       icon: 'ant-design:trademark-circle-outlined',
       key: 'dealCount',
-      title: t('page.home.dealCount'),
+      // title: t('page.home.dealCount'),
+      title: '交易数',
       unit: '',
-      value: 9527
+      value: 1297
     }
   ];
 

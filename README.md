@@ -29,6 +29,7 @@
 
 ### 技术栈
 本系统采用了以下技术栈进行开发：
+- **React SoybeanAdmin** 2.0.0
 - React 19.0.0
 - Vite 6.1.1
 - TypeScript 5.7.3

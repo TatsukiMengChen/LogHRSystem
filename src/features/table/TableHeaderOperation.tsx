@@ -7,7 +7,7 @@ import type { FC } from 'react';
 import DragContent from './DragContent';
 
 interface Props {
-  add: () => void;
+  add?: () => void;
   children?: React.ReactNode;
   columns: AntDesign.TableColumnCheck[];
   disabledDelete?: boolean;
@@ -44,15 +44,17 @@ const TableHeaderOperation: FC<Props> = ({
       {prefix}
       {children || (
         <>
-          <Button
-            ghost
-            icon={<IconIcRoundPlus className="text-icon" />}
-            size="small"
-            type="primary"
-            onClick={add}
-          >
-            {t('common.add')}
-          </Button>
+          {add && (
+            <Button
+              ghost
+              icon={<IconIcRoundPlus className="text-icon" />}
+              size="small"
+              type="primary"
+              onClick={add}
+            >
+              {t('common.add')}
+            </Button>
+          )}
           <Popconfirm
             className="hidden"
             title={t('common.confirmDelete')}

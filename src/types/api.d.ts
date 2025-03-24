@@ -99,12 +99,14 @@ declare namespace Api {
 
     /** role */
     type Role = Common.CommonRecord<{
+      home: string;
       /** role code */
       roleCode: string;
       /** role description */
       roleDesc: string;
       /** role name */
       roleName: string;
+      routes: string[];
     }>;
 
     /** role search params */
@@ -162,6 +164,16 @@ declare namespace Api {
         Api.SystemManage.User,
         'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone' | 'userRoles'
       > &
+        Pick<Api.Common.CommonRecord, 'id' | 'updateBy'>
+    >;
+
+    type AddRoleParams = CommonType.RecordNullable<
+      Pick<Api.SystemManage.Role, 'roleCode' | 'roleDesc' | 'roleName' | 'status'> &
+        Pick<Api.Common.CommonRecord, 'createBy' | 'id' | 'updateBy'>
+    >;
+
+    type UpdateRoleParams = CommonType.RecordNullable<
+      Pick<Api.SystemManage.Role, 'home' | 'roleCode' | 'roleDesc' | 'roleName' | 'routes' | 'status'> &
         Pick<Api.Common.CommonRecord, 'id' | 'updateBy'>
     >;
 

@@ -82,3 +82,32 @@ export function fetchGetMenuTree() {
     url: '/systemManage/getMenuTree'
   });
 }
+
+export function addRoleAPI(data: Api.SystemManage.AddRoleParams) {
+  return request({
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'post',
+    url: '/systemManage/role'
+  });
+}
+
+export function updateRoleAPI(data: Api.SystemManage.UpdateRoleParams) {
+  return request({
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'put',
+    url: '/systemManage/role'
+  });
+}
+
+export function deleteRoleAPI(id: number) {
+  return request({
+    method: 'delete',
+    url: `/systemManage/role/${id}`
+  });
+}

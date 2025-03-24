@@ -11,12 +11,12 @@
     "url": "https://github.com/TatsukiMengChen"
   },
   "license": "MIT",
-  "homepage": "https://github.com/TatsukiMengChen/log-hr-system",
+  "homepage": "https://github.com/TatsukiMengChen/LogHRSystem",
   "repository": {
-    "url": "https://github.com/TatsukiMengChen/log-hr-system.git"
+    "url": "https://github.com/TatsukiMengChen/LogHRSystem.git"
   },
   "bugs": {
-    "url": "https://github.com/TatsukiMengChen/log-hr-system/issues"
+    "url": "https://github.com/TatsukiMengChen/LogHRSystem/issues"
   },
   "keywords": [
     "React admin",

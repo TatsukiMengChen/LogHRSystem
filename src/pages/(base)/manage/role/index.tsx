@@ -2,8 +2,9 @@ import { Suspense } from 'react';
 
 import { enableStatusRecord } from '@/constants/business';
 import { ATG_MAP } from '@/constants/common';
+import { selectUserInfo } from '@/features/auth/authStore';
 import { TableHeaderOperation, useTable, useTableOperate, useTableScroll } from '@/features/table';
-import { fetchGetRoleList } from '@/service/api';
+import { addRoleAPI, deleteRoleAPI, fetchGetRoleList, updateRoleAPI } from '@/service/api';
 
 import RoleSearch from './modules/role-search';
 
@@ -12,9 +13,17 @@ const RoleOperateDrawer = lazy(() => import('./modules/role-operate-drawer'));
 const Role = () => {
   const { t } = useTranslation();
 
+  const userInfo = useAppSelector(selectUserInfo);
+
   const isMobile = useMobile();
 
   // const nav = useNavigate()
+
+  const [menuAuthData, setMenuAuthData] = useState<{
+    home: string;
+    menus: string[];
+    roleId: number;
+  }>();
 
   const { scrollConfig, tableWrapperRef } = useTableScroll();
 
@@ -118,11 +127,19 @@ const Role = () => {
     rowSelection
   } = useTableOperate(data, run, async (res, type) => {
     if (type === 'add') {
-      // add request 调用新增的接口
-      console.log(res);
+      addRoleAPI({
+        ...res,
+        createBy: userInfo.userName,
+        updateBy: userInfo.userName
+      });
     } else {
-      // edit request 调用编辑的接口
-      console.log(res);
+      updateRoleAPI({
+        // ...data,
+        ...res,
+        home: menuAuthData?.home || '/home',
+        routes: menuAuthData?.menus || [],
+        updateBy: userInfo.userName
+      });
     }
   });
 
@@ -134,12 +151,15 @@ const Role = () => {
 
   function handleDelete(id: number) {
     // request
-    console.log(id);
-
+    deleteRoleAPI(id);
     onDeleted();
   }
 
+  const [currentRoutes, setCurrentRoutes] = useState<string[]>([]);
+
   function edit(id: number) {
+    // console.log(data);
+    setCurrentRoutes(data.find(item => item.id === id)?.routes || []);
     handleEdit(id);
   }
 
@@ -185,7 +205,9 @@ const Role = () => {
         <Suspense>
           <RoleOperateDrawer
             {...generalPopupOperation}
+            routes={currentRoutes}
             rowId={editingData?.id || -1}
+            setMenuAuthData={setMenuAuthData}
           />
         </Suspense>
       </ACard>

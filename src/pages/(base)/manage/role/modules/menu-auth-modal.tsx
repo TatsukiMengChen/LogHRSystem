@@ -10,7 +10,7 @@ import type { ModulesProps } from './type';
 
 const flatRoutes = flattenLeafRoutes(getBaseChildrenRoutes(allRoutes));
 
-const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId }) => {
+const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId, routes, setFormData }) => {
   const { t } = useTranslation();
 
   const title = t('common.edit') + t('page.manage.role.menuAuth');
@@ -24,13 +24,20 @@ const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId }) => {
   const tree = filterAndFlattenRoutes(allRoutes[0].children || [], t);
 
   async function getChecks() {
-    console.log(roleId);
+    // console.log(roleId);
     // request
-    setChecks(['/home']);
+    console.log(routes);
+    setChecks(routes || ['/home']);
   }
 
   function handleSubmit() {
     console.log(checks, roleId, home);
+
+    setFormData({
+      home: home || '',
+      menus: checks || [],
+      roleId
+    });
     // request
 
     window.$message?.success?.(t('common.modifySuccess'));

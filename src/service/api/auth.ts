@@ -29,10 +29,10 @@ export function fetchGetUserInfo() {
  */
 export function fetchRefreshToken(refreshToken: string) {
   return request<Api.Auth.LoginToken>({
-    data: {
-      refreshToken
+    headers: {
+      RefreshToken: refreshToken
     },
-    method: 'post',
+    method: 'get',
     url: '/auth/refreshToken'
   });
 }
