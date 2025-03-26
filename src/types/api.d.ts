@@ -88,6 +88,28 @@ declare namespace Api {
       routes: string[];
     }
   }
+
+  namespace Data {
+    type CardData = {
+      customers: number;
+      orders: number;
+      transactionQuantity: number;
+      transactionVolume: number;
+    };
+
+    type LineData = {
+      success: number[];
+      total: number[];
+    };
+
+    type PieData = {
+      data: {
+        name: string;
+        value: number;
+      }[];
+    };
+  }
+
   /**
    * namespace OrderManage
    *

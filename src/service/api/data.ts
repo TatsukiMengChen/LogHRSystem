@@ -2,23 +2,21 @@ import { request } from '../request';
 
 export const Data = {
   getCardData: async () => {
-    request<{
-      customers: number;
-      orders: number;
-      transactionQuantity: number;
-      transactionVolume: number;
-    }>({
+    return request<Api.Data.CardData>({
       method: 'get',
       url: '/data/card'
     });
   },
   getLineData: async () => {
-    request<{
-      success: number[];
-      total: number[];
-    }>({
+    return request<Api.Data.LineData>({
       method: 'get',
       url: '/data/line'
+    });
+  },
+  getPieData: async () => {
+    return request<Api.Data.PieData>({
+      method: 'get',
+      url: '/data/pie'
     });
   }
 };

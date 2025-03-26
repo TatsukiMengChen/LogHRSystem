@@ -1,4 +1,5 @@
 import NumberTicker from '@/components/NumberTicker';
+import { Api } from '@/service/api';
 
 interface CardDataProps {
   color: {
@@ -19,6 +20,21 @@ function getGradientColor(color: CardDataProps['color']) {
 function useGetCardData() {
   const { t } = useTranslation();
 
+  const [data, setData] = useState<Api.Data.CardData>({
+    customers: 0,
+    orders: 0,
+    transactionQuantity: 0,
+    transactionVolume: 0
+  });
+
+  useEffect(() => {
+    Api.Data.getCardData().then(res => {
+      if (res && res.data) {
+        setData(res.data);
+      }
+    });
+  }, []);
+
   const cardData: CardDataProps[] = [
     {
       color: {
@@ -30,7 +46,7 @@ function useGetCardData() {
       // title: t('page.home.visitCount'),
       title: '客户人数',
       unit: '',
-      value: 725
+      value: data.customers
     },
     {
       color: {
@@ -41,7 +57,7 @@ function useGetCardData() {
       key: 'turnover',
       title: t('page.home.turnover'),
       unit: '¥',
-      value: 185026
+      value: data.transactionVolume
     },
     {
       color: {
@@ -53,7 +69,7 @@ function useGetCardData() {
       // title: t('page.home.downloadCount'),
       title: '订单数',
       unit: '',
-      value: 1325
+      value: data.orders
     },
     {
       color: {
@@ -65,7 +81,7 @@ function useGetCardData() {
       // title: t('page.home.dealCount'),
       title: '交易数',
       unit: '',
-      value: 1297
+      value: data.transactionQuantity
     }
   ];
 

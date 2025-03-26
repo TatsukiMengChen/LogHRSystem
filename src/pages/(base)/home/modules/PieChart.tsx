@@ -1,4 +1,5 @@
 import { useLang } from '@/features/lang';
+import { Api } from '@/service/api';
 
 const PieChart = () => {
   // const { t } = useTranslation();
@@ -47,26 +48,26 @@ const PieChart = () => {
     }
   }));
 
-  async function mockData() {
-    await new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
+  // async function mockData() {
+  //   await new Promise(resolve => {
+  //     setTimeout(resolve, 1000);
+  //   });
 
-    updateOptions(opts => {
-      opts.series[0].data = [
-        { name: '数码产品', value: 20 },
-        { name: '食品', value: 10 },
-        { name: '家电', value: 40 },
-        { name: '服装', value: 30 }
-        // { name: t('page.home.study'), value: 20 },
-        // { name: t('page.home.entertainment'), value: 10 },
-        // { name: t('page.home.work'), value: 40 },
-        // { name: t('page.home.rest'), value: 30 }
-      ];
+  //   updateOptions(opts => {
+  //     opts.series[0].data = [
+  //       { name: '数码产品', value: 20 },
+  //       { name: '食品', value: 10 },
+  //       { name: '家电', value: 40 },
+  //       { name: '服装', value: 30 }
+  //       // { name: t('page.home.study'), value: 20 },
+  //       // { name: t('page.home.entertainment'), value: 10 },
+  //       // { name: t('page.home.work'), value: 40 },
+  //       // { name: t('page.home.rest'), value: 30 }
+  //     ];
 
-      return opts;
-    });
-  }
+  //     return opts;
+  //   });
+  // }
 
   function updateLocale() {
     updateOptions((opts, factory) => {
@@ -86,7 +87,20 @@ const PieChart = () => {
   }
 
   async function init() {
-    mockData();
+    // mockData();
+    Api.Data.getPieData().then(res => {
+      if (res && res.data) {
+        updateOptions((opts, factory) => {
+          const originOpts = factory();
+
+          opts.series[0].name = originOpts.series[0].name;
+
+          opts.series[0].data = res.data.data;
+
+          return opts;
+        });
+      }
+    });
   }
 
   useMount(() => {

@@ -23,7 +23,7 @@
   "i18n-ally.extract.targetPickingStrategy": "most-similar",
   "i18n-ally.pathMatcher": "{locale}/{namespaces}.ts",
   "i18n-ally.localesPaths": ["src/locales/langs"],
-  "prettier.enable": false,
+  "prettier.enable": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "unocss.root": ["./"],
   "i18n-ally.sourceLanguage": "zh-cn"

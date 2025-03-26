@@ -1,9 +1,19 @@
 import { useLang } from '@/features/lang';
+import { Api } from '@/service/api';
 
 const LineChart = () => {
   // const { t } = useTranslation();
 
   const { locale } = useLang();
+
+  // const [data, setData] = useState<Api.Data.LineData>({
+  //   success: [0],
+  //   total: [0]
+  // });
+
+  // useEffect(() => {
+
+  // }, []);
 
   const { domRef, updateOptions } = useEcharts(() => ({
     grid: {
@@ -99,22 +109,39 @@ const LineChart = () => {
     }
   }));
 
-  async function mockData() {
-    await new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
+  // async function mockData() {
+  //   await new Promise(resolve => {
+  //     setTimeout(resolve, 1000);
+  //   });
 
-    updateOptions(opts => {
-      opts.xAxis.data = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'];
-      opts.series[0].data = [4623, 6145, 6268, 6411, 1890, 4251, 2978, 3880, 3606, 4311];
-      opts.series[1].data = [2208, 2016, 2916, 4512, 8281, 2008, 1963, 2367, 2956, 678];
+  //   updateOptions(opts => {
+  //     opts.xAxis.data = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'];
+  //     // opts.series[0].data = [4623, 6145, 6268, 6411, 1890, 4251, 2978, 3880, 3606, 4311];
+  //     opts.series[0].data = data.total;
+  //     opts.series[1].data = data.success;
+  //     // opts.series[1].data = [2208, 2016, 2916, 4512, 8281, 2008, 1963, 2367, 2956, 678];
 
-      return opts;
-    });
-  }
+  //     return opts;
+  //   });
+  // }
 
   function init() {
-    mockData();
+    // mockData();
+    Api.Data.getLineData().then(res => {
+      if (res && res.data) {
+        console.log(res.data);
+        // setData(res.data);
+        updateOptions(opts => {
+          opts.xAxis.data = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'];
+          // opts.series[0].data = [4623, 6145, 6268, 6411, 1890, 4251, 2978, 3880, 3606, 4311];
+          opts.series[0].data = res.data.total;
+          opts.series[1].data = res.data.success;
+          // opts.series[1].data = [2208, 2016, 2916, 4512, 8281, 2008, 1963, 2367, 2956, 678];
+
+          return opts;
+        });
+      }
+    });
   }
 
   function updateLocale() {
