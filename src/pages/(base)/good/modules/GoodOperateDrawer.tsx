@@ -1,19 +1,32 @@
 import { Button, Drawer, Flex, Form, Input } from 'antd';
+// import useApp from 'antd/es/app/useApp';
 import type { FC } from 'react';
 
 import { useFormRules } from '@/features/form';
 
-type Model = Pick<Api.GoodManage.Good, 'class' | 'desc' | 'inventory' | 'name' | 'repo' | 'status' | 'weight'>;
+// 从类型错误信息可知，Api.GoodManage.Good 中没有 status 属性
+type Model = Pick<Api.GoodManage.Good, 'class' | 'desc' | 'inventory' | 'name' | 'repo' | 'weight'>;
 
 type RuleKey = Extract<keyof Model, 'name'>;
 
 const GoodOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, onClose, open, operateType }) => {
   const { t } = useTranslation();
+  // const { message } = useApp();
 
   const { defaultRequiredRule } = useFormRules();
 
   const rules: Record<RuleKey, App.Global.FormRule> = {
     name: defaultRequiredRule
+  };
+
+  const onSubmit = async () => {
+    try {
+      await handleSubmit();
+      // message.success(operateType === 'add' ? t('添加商品成功') : t('更新商品成功'));
+    } catch (error) {
+      console.error('提交失败:', error);
+      // message.error(operateType === 'add' ? t('添加商品失败') : t('更新商品失败'));
+    }
   };
 
   return (
@@ -25,7 +38,7 @@ const GoodOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, on
           <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button
             type="primary"
-            onClick={handleSubmit}
+            onClick={onSubmit}
           >
             {t('common.confirm')}
           </Button>

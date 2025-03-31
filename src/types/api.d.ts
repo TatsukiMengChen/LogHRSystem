@@ -234,14 +234,15 @@ declare namespace Api {
 
     /** 添加商品参数 */
     type AddGoodParams = {
-      class: string;
+      class?: string;
       createBy: string;
-      desc: string;
-      inventory: number;
-      name: string;
-      repo: string;
+      desc?: string;
+      inventory?: number;
+      name?: string;
+      repo?: string;
       updateBy: string;
-      weight: number;
+      weight?: number;
+      [key: string]: any; // 允许额外的属性
     };
 
     /** 更新商品参数 */
@@ -257,7 +258,9 @@ declare namespace Api {
     };
 
     /** 商品查询参数 */
-    type GoodSearchParams = CommonType.RecordNullable<Pick<Api.GoodManage.Good, 'class' | 'name'> & CommonSearchParams>;
+    type GoodSearchParams = CommonType.RecordNullable<
+      Pick<Api.GoodManage.Good, 'class' | 'name' | 'repo'> & CommonSearchParams
+    >;
 
     /** 商品列表 */
     type GoodList = Common.PaginatingQueryRecord<Good>;

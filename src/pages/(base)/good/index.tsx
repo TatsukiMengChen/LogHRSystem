@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
+import useApp from 'antd/es/app/useApp';
 import { Suspense, lazy } from 'react';
 
 import { selectUserInfo } from '@/features/auth/authStore';
 import { TableHeaderOperation, useTable, useTableOperate, useTableScroll } from '@/features/table';
-import { Api, addUserAPI, deleteUserAPI, updateUserAPI } from '@/service/api';
+import { Api } from '@/service/api';
 
 import GoodSearch from './modules/GoodSearch';
 
@@ -12,6 +13,8 @@ const GoodOperateDrawer = lazy(() => import('./modules/GoodOperateDrawer'));
 
 const GoodManage = () => {
   const { t } = useTranslation();
+
+  const { message } = useApp();
 
   const userInfo = useAppSelector(selectUserInfo);
 
@@ -29,7 +32,6 @@ const GoodManage = () => {
         class: null,
         current: 1,
         name: null,
-        repo: null,
         size: 10
       },
       columns: () => [
@@ -80,6 +82,15 @@ const GoodManage = () => {
           dataIndex: 'desc',
           key: 'desc',
           minWidth: 200,
+          render: desc => {
+            const description = desc || '';
+            const displayDesc = description.length > 20 ? `${description.slice(0, 20)}...` : description;
+            return (
+              <ATooltip title={description}>
+                <span>{displayDesc}</span>
+              </ATooltip>
+            );
+          },
           title: t('备注')
         },
         {
@@ -120,38 +131,50 @@ const GoodManage = () => {
     // @ts-ignore
     useTableOperate(data, run, async (res, type) => {
       if (type === 'add') {
-        addUserAPI({
+        await Api.Good.addGood({
           ...res,
           createBy: userInfo.userName,
           updateBy: userInfo.userName
         });
+        // message.success(t('添加商品成功'));
         console.log(res);
       } else {
-        updateUserAPI({
+        await Api.Good.updateGood({
           ...res,
           updateBy: userInfo.userName
         });
+        // message.success(t('更新商品成功'));
         console.log(res);
       }
     });
 
   async function handleBatchDelete() {
-    // request
-    console.log(checkedRowKeys);
-    onBatchDeleted();
+    try {
+      // 对批量删除的商品进行处理
+      await Promise.all(checkedRowKeys.map(id => Api.Good.deleteGood(Number(id))));
+      message.success(t('批量删除成功'));
+      onBatchDeleted();
+    } catch (error) {
+      console.error('批量删除失败:', error);
+      message.error(t('批量删除失败'));
+    }
   }
 
-  function handleDelete(id: number) {
-    // request
-    deleteUserAPI(id);
-    console.log(id);
-
-    onDeleted();
+  async function handleDelete(id: number) {
+    try {
+      await Api.Good.deleteGood(id);
+      // message.success(t('删除商品成功'));
+      onDeleted();
+    } catch (error) {
+      console.error('删除商品失败:', error);
+      // message.error(t('删除商品失败'));
+    }
   }
 
   function edit(id: number) {
     handleEdit(id);
   }
+
   return (
     <div className="h-full min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
       <ACollapse
@@ -170,7 +193,7 @@ const GoodManage = () => {
       <ACard
         className="flex-col-stretch sm:flex-1-hidden card-wrapper"
         ref={tableWrapperRef}
-        title={t('page.manage.user.title')}
+        title={t('商品管理')}
         variant="borderless"
         extra={
           <TableHeaderOperation
