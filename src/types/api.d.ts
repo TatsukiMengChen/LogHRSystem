@@ -141,47 +141,126 @@ declare namespace Api {
     };
 
     /** order */
-    type Order = Common.CommonRecord<{
-      /** customer information */
-      customerInfo: CustomerInfo;
-      /** delivery time */
-      deliveryTime: string;
-      /** order items */
-      items: Item[];
-      /** order name */
-      name: string;
-      /** order price */
-      price: string;
-      /** sent out time */
-      sentOutTime: string;
-    }>;
+    type Order = Omit<
+      Common.CommonRecord<{
+        /** customer information */
+        customerInfo: CustomerInfo;
+        /** delivery time */
+        deliveryTime: string;
+        /** order items */
+        items: Item[];
+        /** order name */
+        name: string;
+        /** order price */
+        price: string;
+        /** sent out time */
+        sentOutTime: string;
+      }>,
+      'status'
+    >;
 
     /** order search params */
-    type OrderSearchParams = CommonType.RecordNullable<Pick<OrderManage.Order, 'name' | 'status'> & CommonSearchParams>;
+    type OrderSearchParams = CommonType.RecordNullable<Pick<OrderManage.Order, 'name'> & CommonSearchParams>;
 
     /** order list */
     type OrderList = Common.PaginatingQueryRecord<Order>;
+
+    /** 添加订单参数 */
+    type AddOrderParams = {
+      createBy: string;
+      customerInfo?: {
+        address: string;
+        name: string;
+        phone: string;
+      };
+      deliveryTime?: string;
+      items?: Array<{
+        id: number;
+        name: string;
+        quantity: string;
+        weight: string;
+      }>;
+      name?: string;
+      price?: string;
+      sentOutTime?: string;
+      updateBy: string;
+      [key: string]: any; // 允许额外的属性
+    };
+
+    /** 更新订单参数 */
+    type UpdateOrderParams = {
+      customerInfo?: {
+        address?: string;
+        name?: string;
+        phone?: string;
+      };
+      deliveryTime?: string;
+      id: number;
+      items?: Array<{
+        id: number;
+        name: string;
+        quantity: string;
+        weight: string;
+      }>;
+      name?: string;
+      price?: string;
+      sentOutTime?: string;
+      updateBy: string;
+    };
   }
 
   namespace GoodManage {
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
 
-    type Good = Common.CommonRecord<{
-      /** 分类，分类 */
+    type Good = Omit<
+      Common.CommonRecord<{
+        /** 分类，分类 */
+        class: string;
+        /** 备注，备注 */
+        desc: string;
+        /** ID，ID 编号 */
+        id: number;
+        /** 库存，库存 */
+        inventory: number;
+        /** 商品名称，名称 */
+        name: string;
+        /** 仓库名称，仓库 */
+        repo: string;
+        /** 重量，单位kg */
+        weight: number;
+      }>,
+      'status'
+    >;
+
+    /** 添加商品参数 */
+    type AddGoodParams = {
       class: string;
-      /** 备注，备注 */
+      createBy: string;
       desc: string;
-      /** ID，ID 编号 */
-      id: number;
-      /** 库存，库存 */
       inventory: number;
-      /** 商品名称，名称 */
       name: string;
-      /** 仓库名称，仓库 */
       repo: string;
-      /** 重量，单位kg */
+      updateBy: string;
       weight: number;
-    }>;
+    };
+
+    /** 更新商品参数 */
+    type UpdateGoodParams = {
+      class?: string;
+      desc?: string;
+      id: number;
+      inventory?: number;
+      name?: string;
+      repo?: string;
+      updateBy: string;
+      weight?: number;
+    };
+
+    /** 商品查询参数 */
+    type GoodSearchParams = CommonType.RecordNullable<Pick<Api.GoodManage.Good, 'class' | 'name'> & CommonSearchParams>;
+
+    /** 商品列表 */
+    type GoodList = Common.PaginatingQueryRecord<Good>;
   }
 
   /**

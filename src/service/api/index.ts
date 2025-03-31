@@ -11,3 +11,5 @@ export const Api = {
   Good,
   Order
 };
+
+export { Good, Order };

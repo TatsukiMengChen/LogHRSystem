@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
+import useApp from 'antd/es/app/useApp';
 import { Suspense, lazy } from 'react';
 
 import { selectUserInfo } from '@/features/auth/authStore';
@@ -14,6 +15,8 @@ const OrderOperateDrawer = lazy(() => import('./modules/OrderOperateDrawer'));
 const OrderManage = () => {
   const { t } = useTranslation();
 
+  const { message } = useApp();
+
   const userInfo = useAppSelector(selectUserInfo);
 
   const { scrollConfig, tableWrapperRef } = useTableScroll();
@@ -24,13 +27,12 @@ const OrderManage = () => {
 
   const { columnChecks, data, run, searchProps, setColumnChecks, tableProps } = useTable(
     {
-      apiFn: Api.Order.getGoodList,
+      apiFn: Api.Order.getOrderList,
       // @ts-ignore
       apiParams: {
         current: 1,
         name: null,
-        size: 10,
-        status: null
+        size: 10
       },
       columns: () => [
         {
@@ -71,29 +73,48 @@ const OrderManage = () => {
           // @ts-ignore
           key: 'customerInfo.address',
           minWidth: 150,
-          render: customerInfo => customerInfo?.address,
+          render: customerInfo => {
+            const address = customerInfo?.address || '';
+            const displayAddress = address.length > 15 ? `${address.slice(0, 15)}...` : address;
+            return (
+              <ATooltip title={address}>
+                <span>{displayAddress}</span>
+              </ATooltip>
+            );
+          },
           title: t('客户地址')
         },
         {
           align: 'center',
           dataIndex: 'price',
-          key: 'price',
+          key: 'price' as any,
           title: t('订单价格'),
           width: 100
         },
         {
           align: 'center',
           dataIndex: 'deliveryTime',
-          key: 'deliveryTime',
-          title: t('交付时间'),
-          width: 150
+          // Using string literal as CustomColumnKey
+          key: 'deliveryTime' as any,
+          render: deliveryTime => (
+            <ATooltip title={deliveryTime || t('未设置交付时间')}>
+              <ATag color={deliveryTime ? 'success' : 'default'}>{deliveryTime ? t('已交付') : t('未交付')}</ATag>
+            </ATooltip>
+          ),
+          title: t('订单状态'),
+          width: 100
         },
         {
           align: 'center',
           dataIndex: 'sentOutTime',
-          key: 'sentOutTime',
-          title: t('发货时间'),
-          width: 150
+          key: 'sentOutTime' as any,
+          render: sentOutTime => (
+            <ATooltip title={sentOutTime || t('未设置发货时间')}>
+              <ATag color={sentOutTime ? 'processing' : 'default'}>{sentOutTime ? t('已发货') : t('未发货')}</ATag>
+            </ATooltip>
+          ),
+          title: t('发货状态'),
+          width: 100
         },
         {
           align: 'center',
@@ -101,16 +122,18 @@ const OrderManage = () => {
           render: (_, record) => (
             <div className="flex-center gap-8px">
               <AButton
+                disabled={record.sentOutTime !== null}
                 size="small"
                 type="link"
-                onClick={() => edit(record.id)}
+                onClick={() => handleShip(record.id)}
               >
                 {t('发货')}
               </AButton>
               <AButton
+                disabled={record.deliveryTime !== null}
                 size="small"
                 type="dashed"
-                onClick={() => edit(record.id)}
+                onClick={() => handleComplete(record.id)}
               >
                 {t('完成')}
               </AButton>
@@ -147,14 +170,14 @@ const OrderManage = () => {
     // @ts-ignore
     useTableOperate(data, run, async (res, type) => {
       if (type === 'add') {
-        addUserAPI({
+        Api.Order.addOrder({
           ...res,
           createBy: userInfo.userName,
           updateBy: userInfo.userName
         });
         console.log(res);
       } else {
-        updateUserAPI({
+        Api.Order.updateOrder({
           ...res,
           updateBy: userInfo.userName
         });
@@ -170,15 +193,50 @@ const OrderManage = () => {
 
   function handleDelete(id: number) {
     // request
-    deleteUserAPI(id);
+    Api.Order.deleteOrder(id);
     console.log(id);
 
     onDeleted();
   }
 
   function edit(id: number) {
-    // handleEdit(id);
+    handleEdit(id);
   }
+
+  // 处理发货
+  async function handleShip(id: number) {
+    try {
+      const sentOutTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      await Api.Order.updateOrder({
+        id,
+        sentOutTime,
+        updateBy: userInfo.userName
+      });
+      message.success(t('发货成功'));
+      run();
+    } catch (error) {
+      console.error('发货失败:', error);
+      message.error(t('发货失败'));
+    }
+  }
+
+  // 处理完成订单
+  async function handleComplete(id: number) {
+    try {
+      const deliveryTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      await Api.Order.updateOrder({
+        deliveryTime,
+        id,
+        updateBy: userInfo.userName
+      });
+      message.success(t('订单已完成'));
+      run();
+    } catch (error) {
+      console.error('完成订单失败:', error);
+      message.error(t('完成订单失败'));
+    }
+  }
+
   return (
     <div className="h-full min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
       <ACollapse
@@ -201,7 +259,7 @@ const OrderManage = () => {
         variant="borderless"
         extra={
           <TableHeaderOperation
-            add={() => {}}
+            add={handleAdd}
             columns={columnChecks}
             disabledDelete={checkedRowKeys.length === 0}
             loading={tableProps.loading}
