@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
 import useApp from 'antd/es/app/useApp';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
+import RouteMap from '@/components/AMap';
 import { selectUserInfo } from '@/features/auth/authStore';
 import { TableHeaderOperation, useTable, useTableOperate, useTableScroll } from '@/features/table';
 import { Api, addUserAPI, deleteUserAPI, updateUserAPI } from '@/service/api';
@@ -25,6 +26,21 @@ const OrderManage = () => {
 
   const isMobile = useMobile();
 
+  // 添加地图模态框状态
+  const [mapVisible, setMapVisible] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState('');
+
+  // 显示地图
+  const showAddressMap = (address: string) => {
+    setSelectedAddress(address);
+    setMapVisible(true);
+  };
+
+  // 关闭地图
+  const closeAddressMap = () => {
+    setMapVisible(false);
+  };
+
   const { columnChecks, data, run, searchProps, setColumnChecks, tableProps } = useTable(
     {
       apiFn: Api.Order.getOrderList,
@@ -40,7 +56,7 @@ const OrderManage = () => {
           dataIndex: 'index',
           key: 'index',
           title: t('common.index'),
-          width: 64
+          width: 48
         },
         {
           align: 'center',
@@ -78,7 +94,12 @@ const OrderManage = () => {
             const displayAddress = address.length > 15 ? `${address.slice(0, 15)}...` : address;
             return (
               <ATooltip title={address}>
-                <span>{displayAddress}</span>
+                <span
+                  className="block max-w-full cursor-pointer truncate text-blue-500 hover:text-blue-700"
+                  onClick={() => showAddressMap(address)}
+                >
+                  {displayAddress}
+                </span>
               </ATooltip>
             );
           },
@@ -280,6 +301,26 @@ const OrderManage = () => {
           <OrderOperateDrawer {...generalPopupOperation} />
         </Suspense>
       </ACard>
+
+      {/* 地址地图模态框 */}
+      <AModal
+        footer={null}
+        open={mapVisible}
+        title={t('物流地图')}
+        width="80%"
+        onCancel={closeAddressMap}
+      >
+        <RouteMap
+          endKeyword={{
+            city: '北京',
+            keyword: '亦庄文化园'
+          }}
+          startKeyword={{
+            city: import.meta.env.VITE_AMAP_CITY,
+            keyword: import.meta.env.VITE_AMAP_LOCATION
+          }}
+        />
+      </AModal>
     </div>
   );
 };

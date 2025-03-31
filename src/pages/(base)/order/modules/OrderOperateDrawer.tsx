@@ -167,6 +167,14 @@ const OrderOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, o
           </Form.Item>
 
           <Form.Item
+            label={t('城市')}
+            name={['customerInfo', 'city']}
+            rules={[{ message: t('请输入城市'), required: true }]}
+          >
+            <Input placeholder={t('请输入城市')} />
+          </Form.Item>
+
+          <Form.Item
             label={t('客户地址')}
             name={['customerInfo', 'address']}
             rules={[{ message: t('请输入客户地址'), required: true }]}

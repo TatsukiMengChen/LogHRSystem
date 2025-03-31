@@ -122,6 +122,8 @@ declare namespace Api {
     type CustomerInfo = {
       /** address */
       address: string;
+      /** city */
+      city: string;
       /** customer name */
       name: string;
       /** phone number */
@@ -170,6 +172,7 @@ declare namespace Api {
       createBy: string;
       customerInfo?: {
         address: string;
+        city: string;
         name: string;
         phone: string;
       };
@@ -191,6 +194,7 @@ declare namespace Api {
     type UpdateOrderParams = {
       customerInfo?: {
         address?: string;
+        city?: string;
         name?: string;
         phone?: string;
       };
