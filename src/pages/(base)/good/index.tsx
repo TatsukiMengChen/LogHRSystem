@@ -127,6 +127,8 @@ const GoodManage = () => {
     { showQuickJumper: true }
   );
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     // @ts-ignore
     useTableOperate(data, run, async (res, type) => {
@@ -141,6 +143,7 @@ const GoodManage = () => {
       } else {
         await Api.Good.updateGood({
           ...res,
+          id: selectedId!,
           updateBy: userInfo.userName
         });
         // message.success(t('更新商品成功'));
@@ -172,6 +175,7 @@ const GoodManage = () => {
   }
 
   function edit(id: number) {
+    setSelectedId(id);
     handleEdit(id);
   }
 

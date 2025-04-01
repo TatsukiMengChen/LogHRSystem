@@ -31,6 +31,7 @@ const OrderManage = () => {
   // 添加地图模态框状态
   const [mapVisible, setMapVisible] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
 
   // 显示地图
   const showAddressMap = (address: string) => {
@@ -98,7 +99,10 @@ const OrderManage = () => {
               <ATooltip title={address}>
                 <span
                   className="block max-w-full cursor-pointer truncate text-blue-500 hover:text-blue-700"
-                  onClick={() => showAddressMap(address)}
+                  onClick={() => {
+                    showAddressMap(address);
+                    setSelectedCity(customerInfo?.city || '');
+                  }}
                 >
                   {displayAddress}
                 </span>
@@ -189,6 +193,8 @@ const OrderManage = () => {
     { showQuickJumper: true }
   );
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     // @ts-ignore
     useTableOperate(data, run, async (res, type) => {
@@ -204,7 +210,7 @@ const OrderManage = () => {
         // @ts-ignore
         const date = new Date(res.deliveryTime);
         // @ts-ignore
-        res.deliveryTime = !Number.isNaN(date.getTime()) ? date.getTime() : 0;
+        res.deliveryTime = !Number.isNaN(date.getTime()) ? Math.floor(date.getTime() / 1000) : 0;
       }
       // @ts-ignore
       else if (res.deliveryTime == null) {
@@ -216,7 +222,7 @@ const OrderManage = () => {
         // @ts-ignore
         const date = new Date(res.sentOutTime);
         // @ts-ignore
-        res.sentOutTime = !Number.isNaN(date.getTime()) ? date.getTime() : 0;
+        res.sentOutTime = !Number.isNaN(date.getTime()) ? Math.floor(date.getTime() / 1000) : 0;
       }
       // @ts-ignore
       else if (res.sentOutTime == null) {
@@ -233,6 +239,7 @@ const OrderManage = () => {
       } else {
         Api.Order.updateOrder({
           ...res,
+          id: selectedId!,
           updateBy: userInfo.userName
         });
         console.log(res);
@@ -254,6 +261,7 @@ const OrderManage = () => {
   }
 
   function edit(id: number) {
+    setSelectedId(id);
     handleEdit(id);
   }
 
@@ -345,8 +353,8 @@ const OrderManage = () => {
       >
         <RouteMap
           endKeyword={{
-            city: '北京',
-            keyword: '亦庄文化园'
+            city: selectedCity,
+            keyword: selectedAddress
           }}
           startKeyword={{
             city: import.meta.env.VITE_AMAP_CITY,

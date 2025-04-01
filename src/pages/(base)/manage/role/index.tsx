@@ -116,6 +116,8 @@ const Role = () => {
     ]
   });
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const {
     checkedRowKeys,
     editingData,
@@ -142,6 +144,7 @@ const Role = () => {
         // ...data,
         ...res,
         home: menuAuthData?.home || '/home',
+        id: selectedId!,
         routes: menuAuthData?.menus || [],
         updateBy: userInfo.userName
       });
@@ -164,6 +167,7 @@ const Role = () => {
 
   function edit(id: number) {
     // console.log(data);
+    setSelectedId(id);
     setCurrentRoutes(data.find(item => item.id === id)?.routes || []);
     handleEdit(id);
   }

@@ -21,7 +21,10 @@ const OrderOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, o
   const fetchGoodsList = async () => {
     try {
       setLoading(true);
-      const response = await Api.Good.getGoodList();
+      const response = await Api.Good.getGoodList({
+        current: 1,
+        size: 1000
+      });
       if (response?.data?.records) {
         setGoodsList(response.data.records);
       }

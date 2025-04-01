@@ -147,7 +147,7 @@ const UserManage = () => {
     },
     { showQuickJumper: true }
   );
-
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     useTableOperate(data, run, async (res, type) => {
       if (res.status) {
@@ -165,6 +165,7 @@ const UserManage = () => {
       } else {
         updateUserAPI({
           ...res,
+          id: selectedId!,
           updateBy: userInfo.userName
         });
         console.log(res);
@@ -186,6 +187,7 @@ const UserManage = () => {
   }
 
   function edit(id: number) {
+    setSelectedId(id);
     handleEdit(id);
   }
   return (

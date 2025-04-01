@@ -49,11 +49,18 @@ export const Order = {
 
   /** 获取订单列表 */
   getOrderList: async (params?: Api.OrderManage.OrderSearchParams) => {
-    return request<Api.OrderManage.OrderList>({
+    const res = await request<Api.OrderManage.OrderList>({
       method: 'get',
       params,
       url: '/orderManage/getOrderList'
     });
+
+    // Ensure records is an array even if null
+    if (res.data && res.data.records === null) {
+      res.data.records = [];
+    }
+
+    return res;
   },
 
   /**
