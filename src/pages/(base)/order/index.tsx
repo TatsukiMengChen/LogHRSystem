@@ -1,3 +1,5 @@
+/* eslint-disable no-eq-null */
+/* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
@@ -195,6 +197,31 @@ const OrderManage = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         res.price = Number(res.price);
+      }
+      // Convert date strings to timestamps if they exist
+      // @ts-ignore
+      if (res.deliveryTime && typeof res.deliveryTime === 'string') {
+        // @ts-ignore
+        const date = new Date(res.deliveryTime);
+        // @ts-ignore
+        res.deliveryTime = !Number.isNaN(date.getTime()) ? date.getTime() : 0;
+      }
+      // @ts-ignore
+      else if (res.deliveryTime == null) {
+        // @ts-ignore
+        res.deliveryTime = 0;
+      }
+      // @ts-ignore
+      if (res.sentOutTime && typeof res.sentOutTime === 'string') {
+        // @ts-ignore
+        const date = new Date(res.sentOutTime);
+        // @ts-ignore
+        res.sentOutTime = !Number.isNaN(date.getTime()) ? date.getTime() : 0;
+      }
+      // @ts-ignore
+      else if (res.sentOutTime == null) {
+        // @ts-ignore
+        res.sentOutTime = 0;
       }
       if (type === 'add') {
         Api.Order.addOrder({
