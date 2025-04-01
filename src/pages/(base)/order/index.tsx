@@ -190,6 +190,12 @@ const OrderManage = () => {
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     // @ts-ignore
     useTableOperate(data, run, async (res, type) => {
+      // @ts-ignore
+      if (res.price) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        res.price = Number(res.price);
+      }
       if (type === 'add') {
         Api.Order.addOrder({
           ...res,
