@@ -126,6 +126,11 @@ const Role = () => {
     onDeleted,
     rowSelection
   } = useTableOperate(data, run, async (res, type) => {
+    if (res.status) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      res.status = Number(res.status);
+    }
     if (type === 'add') {
       addRoleAPI({
         ...res,
