@@ -23,6 +23,7 @@ declare global {
   const AForm: typeof import('antd')['Form']
   const AInput: typeof import('antd')['Input']
   const AList: typeof import('antd')['List']
+  const AMap: typeof import('../components/AMap')['default']
   const AMenu: typeof import('antd')['Menu']
   const AModal: typeof import('antd')['Modal']
   const APopconfirm: typeof import('antd')['Popconfirm']

@@ -37,6 +37,7 @@ export const routeMap: RouteMap = {
  "(base)_manage_user_[id]": "/manage/user/:id",
  "(base)_order": "/order",
  "(base)_user-center": "/user-center",
+ "(blank)_gateway": "/gateway",
  "(blank)_login": "/login",
  "(blank)_login_code-login": "/login/code-login",
  "(blank)_login_register": "/login/register",

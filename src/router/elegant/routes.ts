@@ -129,6 +129,12 @@ export const generatedRoutes: ElegantConstRoute[] = [
         name: '(blank)',
         children: [
           {
+            matchedFiles: [null, '/src/pages/(blank)/gateway/index.tsx', null, null],
+            name: '(blank)_gateway',
+            path: '/gateway',
+            handle: { i18nKey: 'route.(blank)_gateway', title: '(blank)_gateway', constant: true }
+          },
+          {
             matchedFiles: ['(blank)_login', '/src/pages/(blank)/login/index.tsx', null, null],
             name: '(blank)_login',
             path: '/login',

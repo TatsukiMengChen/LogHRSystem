@@ -1,8 +1,11 @@
 import { Button, Checkbox, Divider, Input, Space } from 'antd';
+import { useState } from 'react';
 
 import { loginModuleRecord } from '@/constants/app';
 import { useInitAuth } from '@/features/auth/auth';
 import { SubmitEnterButton, useFormRules } from '@/features/form';
+
+import GatewayPage from '../gateway';
 
 type AccountKey = 'admin' | 'super' | 'user';
 interface Account {
@@ -21,6 +24,8 @@ const INITIAL_VALUES = {
 
 const PwdLogin = () => {
   const { t } = useTranslation();
+  const [showGateway, setShowGateway] = useState(true);
+  const [gatewayClosing, setGatewayClosing] = useState(false);
 
   const { loading, toLogin } = useInitAuth();
 
@@ -74,84 +79,110 @@ const PwdLogin = () => {
     navigate('reset-pwd');
   }
 
+  function closeGateway() {
+    // 开始关闭动画
+    setGatewayClosing(true);
+
+    // 在动画完成后真正隐藏组件
+    setTimeout(() => {
+      setShowGateway(false);
+      setGatewayClosing(false);
+    }, 500); // 与CSS动画持续时间匹配
+  }
+
   return (
     <>
-      <h3 className="text-18px text-primary font-medium">{t('page.login.pwdLogin.title')}</h3>
-      <AForm
-        className="pt-24px"
-        form={form}
-        initialValues={INITIAL_VALUES}
-      >
-        <AForm.Item
-          name="userName"
-          rules={userNameRules}
+      {/* Gateway层 */}
+      {showGateway && (
+        <div
+          style={{ height: '100vh', width: '100vw' }}
+          className={`fixed inset-0 z-50 bg-white dark:bg-#1c1c1e transition-all duration-500 ease-in-out ${
+            gatewayClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          }`}
         >
-          <Input />
-        </AForm.Item>
+          <GatewayPage onClose={closeGateway} />
+        </div>
+      )}
 
-        <AForm.Item
-          name="password"
-          rules={pwd}
+      {/* 登录表单层 - 始终渲染但在Gateway显示时被遮挡 */}
+      <div className={showGateway ? 'invisible' : 'visible'}>
+        <h3 className="text-18px text-primary font-medium">{t('page.login.pwdLogin.title')}</h3>
+        <AForm
+          className="pt-24px"
+          form={form}
+          initialValues={INITIAL_VALUES}
         >
-          <Input.Password autoComplete="password" />
-        </AForm.Item>
-        <Space
-          className="w-full"
-          direction="vertical"
-          size={24}
-        >
-          <div className="flex-y-center justify-between">
-            <Checkbox>{t('page.login.pwdLogin.rememberMe')}</Checkbox>
-
-            <Button
-              type="text"
-              onClick={goResetPwd}
-            >
-              {t('page.login.pwdLogin.forgetPassword')}
-            </Button>
-          </div>
-          <SubmitEnterButton
-            block
-            loading={loading}
-            shape="round"
-            size="large"
-            type="primary"
-            onClick={handleSubmit}
+          <AForm.Item
+            name="userName"
+            rules={userNameRules}
           >
-            {t('common.confirm')}
-          </SubmitEnterButton>
-          <div className="flex-y-center justify-between gap-12px">
-            <Button
+            <Input />
+          </AForm.Item>
+
+          <AForm.Item
+            name="password"
+            rules={pwd}
+          >
+            <Input.Password autoComplete="password" />
+          </AForm.Item>
+          <Space
+            className="w-full"
+            direction="vertical"
+            size={24}
+          >
+            <div className="flex-y-center justify-between">
+              <Checkbox>{t('page.login.pwdLogin.rememberMe')}</Checkbox>
+
+              <Button
+                type="text"
+                onClick={goResetPwd}
+              >
+                {t('page.login.pwdLogin.forgetPassword')}
+              </Button>
+            </div>
+            <SubmitEnterButton
               block
-              className="flex-1"
-              onClick={goCodeLogin}
+              loading={loading}
+              shape="round"
+              size="large"
+              type="primary"
+              onClick={handleSubmit}
             >
-              {t(loginModuleRecord['code-login'])}
-            </Button>
-            <Button
-              block
-              className="flex-1"
-              onClick={goRegister}
-            >
-              {t(loginModuleRecord.register)}
-            </Button>
-          </div>
-          <Divider className="!m-0 !text-14px !text-#666">{t('page.login.pwdLogin.otherAccountLogin')}</Divider>
-          <div className="flex-center gap-12px">
-            {accounts.map(item => {
-              return (
-                <Button
-                  key={item.key}
-                  type="primary"
-                  onClick={() => handleAccountLogin(item)}
-                >
-                  {item.label}
-                </Button>
-              );
-            })}
-          </div>
-        </Space>
-      </AForm>
+              {t('common.confirm')}
+            </SubmitEnterButton>
+            <div className="flex-y-center justify-between gap-12px">
+              <Button
+                block
+                className="flex-1"
+                onClick={goCodeLogin}
+              >
+                {t(loginModuleRecord['code-login'])}
+              </Button>
+              <Button
+                block
+                className="flex-1"
+                onClick={goRegister}
+              >
+                {t(loginModuleRecord.register)}
+              </Button>
+            </div>
+            <Divider className="!m-0 !text-14px !text-#666">{t('page.login.pwdLogin.otherAccountLogin')}</Divider>
+            <div className="flex-center gap-12px">
+              {accounts.map(item => {
+                return (
+                  <Button
+                    key={item.key}
+                    type="primary"
+                    onClick={() => handleAccountLogin(item)}
+                  >
+                    {item.label}
+                  </Button>
+                );
+              })}
+            </div>
+          </Space>
+        </AForm>
+      </div>
     </>
   );
 };
