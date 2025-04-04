@@ -64,6 +64,19 @@ export const Order = {
   },
 
   /**
+   * 获取路线
+   *
+   * @param id 订单ID
+   * @returns 路线点数据
+   */
+  getRoute: (id: number) => {
+    return request<Api.OrderManage.RoutePoints>({
+      method: 'get',
+      url: `/orderManage/getRoute/${id}`
+    });
+  },
+
+  /**
    * 发货
    *
    * @param id 订单ID
@@ -87,7 +100,7 @@ export const Order = {
    * @param data 订单信息
    */
   updateOrder: (data: Api.OrderManage.UpdateOrderParams) => {
-    return request({
+    return request<Api.OrderManage.RoutePoints>({
       data,
       headers: {
         'Content-Type': 'application/json'

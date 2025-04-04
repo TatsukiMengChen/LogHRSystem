@@ -1,16 +1,11 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 import { type FC, useEffect, useRef, useState } from 'react';
 
+import { Api } from '@/service/api';
+
 interface AMapProps {
-  endKeyword: {
-    city: string;
-    keyword: string;
-  };
-  showPanel?: boolean;
-  startKeyword: {
-    city: string;
-    keyword: string;
-  }; // 是否显示路线导航面板
+  id?: number; // 路线ID，用于获取路线点数据，改为number类型
 }
 
 // 加载高德地图安全配置
@@ -57,41 +52,6 @@ const addPanelStyle = () => {
   const style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML = `
-    #panel {
-      position: absolute;
-      background-color: white;
-      max-height: 90%;
-      overflow-y: auto;
-      top: 10px;
-      right: 10px;
-      width: 280px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
-      z-index: 10;
-    }
-    #panel .amap-call {
-      background-color: #009cf9;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
-    #panel .amap-lib-driving {
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      overflow: hidden;
-    }
-    .panel-toggle-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 100;
-      padding: 6px 12px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      cursor: pointer;
-      font-size: 14px;
-    }
     .map-container-wrapper {
       position: relative;
       height: 60vh;
@@ -101,18 +61,89 @@ const addPanelStyle = () => {
   document.head.appendChild(style);
 };
 
-const RouteMap: FC<AMapProps> = ({ endKeyword, showPanel = true, startKeyword }) => {
+// 模拟API请求获取路线点
+const fetchRoutePoints = async (id: number): Promise<number[][]> => {
+  // 模拟网络延迟
+  console.log('Fetching route points...', id);
+  // return new Promise(resolve => {
+  //   setTimeout(() => {
+  //     // 模拟不同ID返回不同的路线点
+  //     const routes: Record<number, number[][]> = {
+  //       // 默认路线
+  //       0: [
+  //         [116.379028, 39.865042], // 起点
+  //         [116.379028, 39.885042], // 途经点
+  //         [116.427281, 39.903719] // 终点
+  //       ],
+  //       1: [
+  //         [116.379028, 39.865042], // 起点
+  //         [116.379028, 39.885042], // 途经点1
+  //         [116.427281, 39.903719] // 终点
+  //       ],
+  //       2: [
+  //         [116.379028, 39.865042], // 起点
+  //         [116.397428, 39.890923], // 途经点1
+  //         [116.410728, 39.895532], // 途经点2
+  //         [116.427281, 39.903719] // 终点
+  //       ],
+  //       3: [
+  //         [116.379028, 39.865042], // 起点
+  //         [116.379028, 39.885042], // 途经点1
+  //         [116.397428, 39.890923], // 途经点2
+  //         [116.410728, 39.895532], // 途经点3
+  //         [116.417963, 39.899603], // 途经点4
+  //         [116.427281, 39.903719] // 终点
+  //       ]
+  //     };
+
+  //     resolve(routes[id] || routes[0]);
+  //   }, 1000); // 模拟1秒网络延迟
+  // });
+  const res = await Api.Order.getRoute(id);
+  console.log('获取路线点数据:', res);
+  // 处理返回的坐标点，将[0,0]替换为默认坐标
+  const defaultPoint = [116.397428, 39.890923]; // 默认坐标
+  const validPoints =
+    res.data?.points?.map((point: number[]) => {
+      // 如果坐标是[0,0]或者无效，则使用默认坐标
+      if (!point || point.length < 2 || (point[0] === 0 && point[1] === 0)) {
+        return defaultPoint;
+      }
+      return point;
+    }) || [];
+
+  return validPoints;
+};
+
+const RouteMap: FC<AMapProps> = ({ id = 0 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const [isPanelVisible, setIsPanelVisible] = useState(showPanel);
+  const [loading, setLoading] = useState(true);
+  const [points, setPoints] = useState<number[][]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // 切换面板显示/隐藏
-  const togglePanel = () => {
-    setIsPanelVisible(prev => !prev);
-  };
-
+  // 获取路线点数据
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    fetchRoutePoints(id)
+      .then(routePoints => {
+        setPoints(routePoints);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('获取路线数据失败:', err);
+        setError('获取路线数据失败，请稍后重试');
+        setLoading(false);
+      });
+  }, [id]);
+
+  // 加载地图并规划路线
+  useEffect(() => {
+    // 如果还在加载数据或者没有点数据，则不初始化地图
+    if (loading || points.length < 2) return;
+
     // 添加面板样式
     addPanelStyle();
 
@@ -130,29 +161,39 @@ const RouteMap: FC<AMapProps> = ({ endKeyword, showPanel = true, startKeyword })
 
         // 创建地图实例
         const map = new AMap.Map(mapContainerRef.current, {
-          // center: [116.397428, 39.90923],
+          center: points[0], // 以起点为中心
           resizeEnable: true,
           zoom: 13
         });
 
         mapInstanceRef.current = map;
 
+        // 获取起点和终点
+        const startPoint = points[0];
+        const endPoint = points[points.length - 1];
+
+        // 获取途经点（如果有）
+        const waypoints = points.length > 2 ? points.slice(1, points.length - 1) : [];
+
         // 设置驾车导航配置
         const drivingOptions = {
           map,
-          panel: 'panel',
           policy: 0 // 使用速度优先策略
         };
 
         // 构造路线导航类
         const driving = new AMap.Driving(drivingOptions);
 
-        // 根据起终点名称规划驾车导航路线
+        // 转换途经点格式
+        const waypointsLngLat = waypoints.map(point => new AMap.LngLat(point[0], point[1]));
+
+        // 根据起终点经纬度规划驾车导航路线
         driving.search(
-          [
-            { city: startKeyword.city, keyword: startKeyword.keyword },
-            { city: endKeyword.city, keyword: endKeyword.keyword }
-          ],
+          new AMap.LngLat(startPoint[0], startPoint[1]),
+          new AMap.LngLat(endPoint[0], endPoint[1]),
+          {
+            waypoints: waypointsLngLat
+          },
           (status: string, result: any) => {
             if (status === 'complete') {
               console.log('绘制驾车路线完成');
@@ -161,41 +202,64 @@ const RouteMap: FC<AMapProps> = ({ endKeyword, showPanel = true, startKeyword })
             }
           }
         );
-      } catch (error) {
-        console.error('地图加载失败:', error);
+      } catch (err) {
+        console.error('地图加载失败:', err);
+        setError('地图加载失败，请检查网络连接或刷新页面');
       }
     };
 
     initMap();
 
-    // 组件卸载时销毁地图
+    // 清理函数
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.destroy();
+        mapInstanceRef.current = null;
       }
     };
-  }, [startKeyword, endKeyword, showPanel]);
+  }, [points, loading]);
 
   return (
     <div className="map-container-wrapper">
-      <button
-        className="panel-toggle-btn"
-        style={{ left: '10px', right: 'auto' }}
-        onClick={togglePanel}
-      >
-        {isPanelVisible ? '隐藏面板' : '显示面板'}
-      </button>
+      {loading && (
+        <div
+          style={{
+            background: 'rgba(255, 255, 255, 0.8)',
+            borderRadius: '4px',
+            left: '50%',
+            padding: '10px 20px',
+            position: 'absolute',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 100
+          }}
+        >
+          加载路线数据中...
+        </div>
+      )}
+
+      {error && (
+        <div
+          style={{
+            background: 'rgba(255, 255, 255, 0.8)',
+            borderRadius: '4px',
+            color: 'red',
+            left: '50%',
+            padding: '10px 20px',
+            position: 'absolute',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 100
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <div
         className="h-full w-full"
         id="container"
         ref={mapContainerRef}
-      />
-
-      <div
-        id="panel"
-        ref={panelRef}
-        style={{ display: isPanelVisible ? 'block' : 'none' }}
       />
     </div>
   );

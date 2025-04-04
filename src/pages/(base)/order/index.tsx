@@ -33,6 +33,8 @@ const OrderManage = () => {
   const [selectedAddress, setSelectedAddress] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   // 显示地图
   const showAddressMap = (address: string) => {
     setSelectedAddress(address);
@@ -100,6 +102,7 @@ const OrderManage = () => {
                 <span
                   className="block max-w-full cursor-pointer truncate text-blue-500 hover:text-blue-700"
                   onClick={() => {
+                    setSelectedId(customerInfo?.id);
                     showAddressMap(address);
                     setSelectedCity(customerInfo?.city || '');
                   }}
@@ -192,8 +195,6 @@ const OrderManage = () => {
     },
     { showQuickJumper: true }
   );
-
-  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const { checkedRowKeys, generalPopupOperation, handleAdd, handleEdit, onBatchDeleted, onDeleted, rowSelection } =
     // @ts-ignore
@@ -313,7 +314,6 @@ const OrderManage = () => {
           }
         ]}
       />
-
       <ACard
         className="flex-col-stretch sm:flex-1-hidden card-wrapper"
         ref={tableWrapperRef}
@@ -352,14 +352,15 @@ const OrderManage = () => {
         onCancel={closeAddressMap}
       >
         <RouteMap
-          endKeyword={{
-            city: selectedCity,
-            keyword: selectedAddress
-          }}
-          startKeyword={{
-            city: import.meta.env.VITE_AMAP_CITY,
-            keyword: import.meta.env.VITE_AMAP_LOCATION
-          }}
+          id={selectedId ?? undefined}
+          // endKeyword={{
+          //   city: selectedCity,
+          //   keyword: selectedAddress
+          // }}
+          // startKeyword={{
+          //   city: import.meta.env.VITE_AMAP_CITY,
+          //   keyword: import.meta.env.VITE_AMAP_LOCATION
+          // }}
         />
       </AModal>
     </div>

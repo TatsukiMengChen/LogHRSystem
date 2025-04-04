@@ -211,6 +211,10 @@ declare namespace Api {
       sentOutTime?: string;
       updateBy: string;
     };
+
+    type RoutePoints = {
+      points: [number, number][];
+    };
   }
 
   namespace GoodManage {
